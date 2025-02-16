@@ -1,0 +1,179 @@
+/* Modal Overlay */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
+  }
+  
+  /* Modal Box */
+  .modal {
+    background: white;
+    width: 750px;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+  }
+  
+  /* Modal Header */
+  .modal-header {
+    background: #560779;
+    color: white;
+    padding: 16px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: relative;
+  }
+
+  .modal-title {
+    font-size: large;
+    text-align: center;
+    width: 100%;
+    font-weight: lighter;
+  }
+  
+  .close-icon {
+    font-size: 22px;
+    cursor: pointer;
+    position: absolute;
+    right: 10px;
+  }
+  
+  /* Modal Body */
+  .modal-body {
+    padding: 25px 25px 10px 25px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+  
+  /* Form Group */
+  .form-group {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  label {
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 6px;
+    color: #560779;
+  }
+  
+  input, select {
+    padding: 10px;
+    border: 2px solid #560779;
+    border-radius: 8px;
+    font-size: 14px;
+    outline: none;
+    transition: 0.3s;
+  }
+  
+  input:focus, select:focus {
+    border-color: #8a2be2;
+  }
+  
+  /* Date Picker */
+  .date-input {
+    position: relative;
+  }
+  
+  .date-input input {
+    width: 100%;
+    padding-right: 35px;
+  }
+  
+  .calendar-icon {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 18px;
+    color: #560779;
+  }
+  
+  /* Save Button */
+  .save-btn {
+    width: 90%;
+    margin: 20px auto;
+    display: block;
+    padding: 12px;
+    border: none;
+    border-radius: 8px;
+    background: #ddd;
+    color: white;
+    font-size: 16px;
+    cursor: not-allowed;
+    transition: 0.3s;
+  }
+  
+  .save-btn:hover {
+    background: #bbb;
+  }
+  
+  .candidate_button:disabled {
+    background: #bbb;
+  }
+  
+
+  .checkbox {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+  }
+  
+  .checkbox input {
+    display: none;
+  }
+  
+  .checkmark {
+    width: 20px;
+    height: 20px;
+    border: 2px solid #6b21a8;
+    border-radius: 4px;
+    display: inline-block;
+    position: relative;
+  }
+  
+  .checkbox input:checked + .checkmark::after {
+    content: "✔";
+    position: absolute;
+    left: 2px;
+    top: -4px;
+    font-size: 16px;
+    color: #6b21a8;
+  }
+  
+  
+  
+  .dropdown-menu2 {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    width: 340px;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 0px 8px rgba(0, 0, 0, 0.1), 0 4px 8px rgba(0, 0, 0, 0.1);
+    /* Balanced shadow above and below */
+    list-style: none;
+    padding: 10px 0;
+    z-index: 30;
+    overflow: visible;
+}
+
+.dropdown-menu2 li {
+  padding: 10px 15px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.dropdown-menu2 li:hover {
+  background: #f0f0f0;
+}
