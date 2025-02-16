@@ -2,7 +2,8 @@ import axios from "axios";
 import {jwtDecode} from "jwt-decode"
 
 const API = axios.create({
-  baseURL: "http://localhost:5000/api",
+  baseURL: "https://hr-management-ffd3.onrender.com/api",
+  // baseURL: "http://localhost:5000/api",
 });
 
 API.interceptors.request.use((req) => {
