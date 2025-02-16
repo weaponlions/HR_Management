@@ -8,7 +8,6 @@ import { getCandidates, addCandidate, deleteCandidate, downloadResume, getCandid
 
 
 const statusList = ["Status", "New", "Applied", "Scheduled", "Ongoing", "Selected", "Rejected"];
-// const positionList = ["Position", "Designer", "Human Resource", "Developer"];
 
 const Candidate = () => {
   const [modal, setModal] = useState(false);

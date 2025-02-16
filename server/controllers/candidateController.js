@@ -156,8 +156,7 @@ export const updateCandidateStatus = async (req, res) => {
     if (!Types.ObjectId.isValid(id)) {
       return res.status(400).json({ message: "Invalid candidate ID format." });
     }
-    console.log({ status })
-    const validStatuses = ["Applied", "Interview", "Selected", "Rejected"];
+    const validStatuses = ["New", "Applied", "Interview", "Selected", "Rejected", "Scheduled", "Ongoing"];
     if (!status || !validStatuses.includes(status)) {
       return res.status(400).json({ message: "Invalid status. Valid options are 'Applied', 'Interview', 'Selected', 'Rejected'." });
     }

@@ -7,8 +7,8 @@ const candidateSchema = new mongoose.Schema(
     phone: { type: String, required: true },
     position: { type: String, required: true }, 
     experience: { type: String, required: true },
-    resume: { type: String, required: false }, // Stores file path or URL
-    status: { type: String, enum: ["Applied", "Interview", "Selected", "Rejected"], default: "Applied" },
+    resume: { type: String, required: false },
+    status: { type: String, enum: ["New", "Applied", "Interview", "Selected", "Rejected", "Scheduled", "Ongoing"], default: "Applied" },
   },
   { timestamps: true }
 );
