@@ -1,22 +1,31 @@
 import React, { useState } from "react";
-import "./style.css";
 import { Link, useNavigate } from "react-router-dom";
 import { login } from "../../services/authService";
+import { useAuth } from "../../context/AuthContext";
+import Loader from "../Items/Loader";
 
 const Login = () => {
+  const [loading, setLoading] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
+  const { setToken } = useAuth();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (loading) {
+      return;
+    }
+    setLoading(true)
     try {
       const { token } = await login(email, password);
-      localStorage.setItem("token", token);
-      navigate("/candidate");
+      // localStorage.setItem("token", token);
+      setToken(token)
+      navigate("/candidate", {replace: true});
     } catch (error) {
       alert("Invalid credentials");
     }
+    setLoading(false)
   };
 
   return (
@@ -45,13 +54,16 @@ const Login = () => {
             </div>
             <p className="auth-forgot-password" style={{textAlign: "left", color: "#a7a7a7", margin: 0}}>Forgot Password?</p>
 
-            <button type="submit" className="auth-button">Login</button>
+            <button type="submit" className="auth-button">
+              {loading ? <Loader size={10} color="white" /> : "Login"}
+            </button>
             <p className="auth-text" style={{textAlign: "left", color: "#a7a7a7"}}>
               Don't have an account? <Link to="/register" className="auth-link">Register</Link>
             </p>
           </form>
         </div>
       </div>
+      
     </div>
   );
 };

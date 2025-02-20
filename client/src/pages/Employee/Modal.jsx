@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { AiOutlineCalendar, AiOutlineClose } from 'react-icons/ai';
 import Input from '../Items/Input';
+import DateInput from '../Leave/DateInput';
 // import "./Modal.css"
 
 const Modal = ({ data, onClose, setData, handleSubmit, positionList }) => {
@@ -62,8 +63,9 @@ const Modal = ({ data, onClose, setData, handleSubmit, positionList }) => {
 
             <div className="form-group">
               <div className="date-input">
-                <Input type="date" required={true} label={"Date of Joining"} name="dateOfJoining" value={data.dateOfJoining} onChange={handleChange} />
-                <AiOutlineCalendar className="calendar-icon" />
+                {/* <Input type="date" required={true} label={"Date of Joining"} name="dateOfJoining" value={data.dateOfJoining} onChange={handleChange} /> */}
+                {/* <AiOutlineCalendar className="calendar-icon" /> */}
+                <DateInput label={"Date of Joining"} required name="dateOfJoining" value={data.dateOfJoining} onChange={handleChange} width='100%' radius='10px' border='2px solid #560779' weight={600} />
               </div>
             </div>
           </div>

@@ -1,11 +1,12 @@
-import React, { useState } from "react";
-import "./Sidebar.css";
+import React from "react";
 import { FaUsers, FaChartBar, FaSignOutAlt, FaUserPlus, FaSearch } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../context/AuthContext";
 
 const Sidebar = ({title}) => {
   const active = title;
   const navigate = useNavigate();
+    const { setToken } = useAuth();
   
   const changeRoute = (path) => {
     navigate(path)
@@ -27,7 +28,7 @@ const Sidebar = ({title}) => {
         <h4>Recruitment</h4>
         <div
           className={`sidebar-menu-item ${active === "candidate" ? "active" : ""}`}
-          onClick={() => changeRoute("candidate")}
+          onClick={() => changeRoute("")}
         >
           <FaUserPlus />
           <span>Candidates</span>
@@ -61,7 +62,7 @@ const Sidebar = ({title}) => {
 
       <div className="sidebar-menu-section">
         <h4>Others</h4>
-        <div className="sidebar-menu-item" onClick={() => {localStorage.clear(); changeRoute("/login")}}>
+        <div className="sidebar-menu-item" onClick={() => { setToken(); changeRoute("/login")}}>
           <FaSignOutAlt />
           <span>Logout</span>
         </div>

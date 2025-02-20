@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
-import "./LeaveCalendar.css";
 import { getLeave } from "../../services/leaveService";
 
 const LeaveCalendar = ({  }) => {

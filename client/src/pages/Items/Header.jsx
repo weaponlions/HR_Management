@@ -1,8 +1,6 @@
 import React from "react";
 import { AiOutlineMail } from "react-icons/ai";
 import { IoMdNotificationsOutline } from "react-icons/io";
-import { FaChevronDown } from "react-icons/fa";
-import "./Header.css"; 
 import Dropdown from "./Dropdown";
 
 const Header = ({title}) => {

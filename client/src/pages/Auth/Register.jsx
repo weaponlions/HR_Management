@@ -1,32 +1,40 @@
 import React, { useState, useContext } from "react";
-import { Link } from "react-router-dom"; 
+import { Link } from "react-router-dom";
 import { register } from "../../services/authService";
 import { useNavigate } from "react-router-dom";
+import Loader from "../Items/Loader";
 
 const Register = () => {
   const [user, setUser] = useState({ name: "", email: "", password: "", confirmPassword: "", role: "HR" });
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (user.name == "" || user.email == "" || user.password == "" || user.confirmPassword == "") {
-      return alert("All field is required.");
+    if (loading) {
+      return;
     }
-    if (user.password != user.confirmPassword) {
+    setLoading(true)
+    if (user.name == "" || user.email == "" || user.password == "" || user.confirmPassword == "") {
+      alert("All field is required.");
+    }
+    else if (user.password != user.confirmPassword) {
       console.log(user)
       return alert("Confirm Password does not match.");
     }
-    try {
-      const { token } = await register(user);
-      // login(token); 
-      navigate("/login");
-    } catch (error) {
-      alert("Registration failed. Email might already be in use.");
+    else {
+      try {
+        const { token } = await register(user);
+        navigate("/login");
+      } catch (error) {
+        alert("Registration failed. Email might already be in use.");
+      }
     }
+    setLoading(false)
   };
 
   const inputChange = (e) => {
-    const {name, value} = e.target;
+    const { name, value } = e.target;
     setUser({ ...user, [name]: value })
   }
 
@@ -64,7 +72,9 @@ const Register = () => {
               <input type="password" placeholder="Confirm Password" name="confirmPassword" value={user.confirmPassword} onChange={inputChange} required />
             </div>
 
-            <button type="submit">Register</button>
+            <button type="submit">
+              {loading ? <Loader color="white" size={10} /> : "Register"}
+            </button>
             <p style={{ textAlign: "left", marginTop: "10px", color: "#A4A4A4" }}>Already have an account? <Link to="/login">Login</Link></p>
           </form>
         </div>

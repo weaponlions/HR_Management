@@ -1,6 +1,5 @@
 import React, { useState } from 'react'
-import { AiOutlineCalendar, AiOutlineClose } from 'react-icons/ai';
-import "./Modal.css"
+import { AiOutlineClose } from 'react-icons/ai';
 import Input from '../Items/Input';
 
 const Modal = ({ data, onClose, setData, handleSubmit }) => {

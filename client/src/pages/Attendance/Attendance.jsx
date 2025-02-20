@@ -3,33 +3,36 @@ import { FaEllipsisV, FaSearch } from 'react-icons/fa';
 import Select from '../../components/Select';
 import Dropdown from '../Items/Dropdown';
 import { getAttendance, markAttendance } from '../../services/attendanceService';
+import Loader from '../Items/Loader';
 
 const statusList = ["Status", "Present", "Absent", "Medical Leave", "Work from Home"];
 
 const Attendance = () => {
     const [status, setStatus] = useState(statusList[0]);
-
+    const [loading, setLoading] = useState(false);
     const [employees, setEmployees] = useState([]);
     const [search, setSearch] = useState("");
 
     useEffect(() => {
-        fetchEmployees(); 
+        fetchEmployees();
     }, []);
 
     const fetchEmployees = async () => {
+        setLoading(true)
         try {
             const data = await getAttendance(search, (status != "" && status != "Status" ? status : ""));
             setEmployees(data.data);
         } catch (error) {
             console.error("Error fetching employees", error);
         }
+        setLoading(false)
     };
 
-      const changeStatus = (_id, val) => {
+    const changeStatus = (_id, val) => {
         markAttendance(_id, val)
-        const list = employees.map((v) => v.employee._id == _id ? {...v, attendanceStatus: val} : v)
+        const list = employees.map((v) => v.employee._id == _id ? { ...v, attendanceStatus: val } : v)
         setEmployees(list);
-      }
+    }
 
     useEffect(() => {
         fetchEmployees();
@@ -39,7 +42,7 @@ const Attendance = () => {
         <div>
             <div className="candidate_SearchBox">
                 <div className="candidate_SearchBox_left">
-                <Select options={statusList} setSelected={setStatus} selected={status} />
+                    <Select options={statusList} setSelected={setStatus} selected={status} />
                 </div>
                 <div className="candidate_SearchBox_right">
                     <div className="sidebar-search-box">
@@ -69,7 +72,7 @@ const Attendance = () => {
                                 </td>
                                 <td data-label="Employee Name">{emp.employee.name}</td>
                                 <td data-label="Position">{emp.employee.position}</td>
-                                <td data-label="Department">{emp.employee.department}</td> 
+                                <td data-label="Department">{emp.employee.department}</td>
                                 <td data-label="Task">{emp.employee.task}</td>
                                 <td data-label="Status">
                                     <Select options={statusList} setSelected={changeStatus} id={emp.employee._id} selected={emp.attendanceStatus ?? "Status"} />
@@ -79,6 +82,16 @@ const Attendance = () => {
                                 </td>
                             </tr>
                         ))}
+
+                        {
+                            employees.length == 0 && (
+                                <tr>
+                                    <td colSpan={8} style={{ textAlign: "center" }}>
+                                        {loading ? <Loader spinner size={30} /> : "No data found"}
+                                    </td>
+                                </tr>
+                            )
+                        }
                     </tbody>
                 </table>
             </div>

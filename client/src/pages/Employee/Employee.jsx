@@ -4,13 +4,14 @@ import Select from '../../components/Select';
 import Modal from './Modal';
 import Dropdown from '../Items/Dropdown';
 import { getEmployees, addEmployee, updateEmployee, deleteEmployee, getEmployeePosition } from "../../services/employeeService";
+import Loader from '../Items/Loader';
 
-const statusList = ["Status", "New", "Scheduled", "Ongoing", "Selected", "Rejected"];
 // const positionList = ["Position", "Designer", "Human Resource", "Developer"];
 
 const Employee = () => {
   const [modal, setModal] = useState(false);
-  const [status, setStatus] = useState(statusList[0]);
+    const [loading, setLoading] = useState(false);
+    const [modalLoading, setModalLoading] = useState(false);
   const [position, setPosition] = useState("Position");
   const [positionList, setPositionList] = useState([]);
 
@@ -28,12 +29,14 @@ const Employee = () => {
   }, []);
 
   const fetchEmployees = async () => {
+    setLoading(true)
     try {
       const data = await getEmployees(search, (position != "" && position != "Position" ? position : ""));
       setEmployees(data.employees);
     } catch (error) {
       console.error("Error fetching employees", error);
     }
+    setLoading(false)
   };
 
   const fetchPosition = async () => {
@@ -46,6 +49,7 @@ const Employee = () => {
   };
 
   const handleAddEmployee = async (data) => {
+    setModalLoading(true);
     try {
       await addEmployee(data);
       fetchEmployees();
@@ -53,6 +57,7 @@ const Employee = () => {
     } catch (error) {
       console.error("Error adding employee", error);
     }
+    setModalLoading(false);
   };
 
   const handleUpdateEmployee = async (data) => {
@@ -60,12 +65,14 @@ const Employee = () => {
       if (data._id == null) {
         return handleAddEmployee(data)
       }
+      setModalLoading(true);
       await updateEmployee(data._id, data);
       fetchEmployees();
       setEditingEmployee({ name: "", email: "", phone: "", department: "", position: "", dateOfJoining: "", _id: null });
     } catch (error) {
       console.error("Error updating employee", error);
     }
+    setModalLoading(false);
   };
 
   const handleDelete = async (id) => {
@@ -130,10 +137,20 @@ const Employee = () => {
                 </td>
               </tr>
             ))}
+            {
+              employees.length == 0 && (
+                <tr>
+                  <td colSpan={8} style={{textAlign: "center"}}>
+                    {loading ? <Loader spinner size={30} /> : "No data found"}
+                  </td>
+                </tr>
+              )
+            } 
           </tbody>
         </table>
       </div>
       {modal && <Modal data={editingEmployee} positionList={positionList} handleSubmit={handleUpdateEmployee} setData={setEditingEmployee} onClose={toggleModel} />}
+      {modalLoading && <Loader fullScreen size={30} />}
     </div>
   )
 }

@@ -1,16 +1,17 @@
 import React, { useEffect, useState } from 'react'
-import "./Candidate.css"
 import { FaSearch } from 'react-icons/fa';
 import Select from '../../components/Select';
 import Modal from './Modal';
 import Dropdown from '../Items/Dropdown';
 import { getCandidates, addCandidate, deleteCandidate, downloadResume, getCandidatePosition, updateCandidate, updateCandidateStatus } from "../../services/candidateService";
-
+import Loader from "./../Items/Loader";
 
 const statusList = ["Status", "New", "Applied", "Scheduled", "Ongoing", "Selected", "Rejected"];
 
 const Candidate = () => {
   const [modal, setModal] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [modalLoading, setModalLoading] = useState(false);
   const [status, setStatus] = useState(statusList[0]);
   const [position, setPosition] = useState("Position");
   const [positionList, setPositionList] = useState([]);
@@ -25,12 +26,14 @@ const Candidate = () => {
   }, []);
 
   const fetchCandidates = async () => {
+    setLoading(true)
     try {
       const data = await getCandidates(search, (position != "" && position != "Position" ? position : ""), (status != "" && status != "Status" ? status : ""));
       setCandidates(data.candidates);
     } catch (error) {
       console.error("Error fetching candidates", error);
     }
+    setLoading(false)
   };
 
   const fetchPosition = async () => {
@@ -42,27 +45,31 @@ const Candidate = () => {
     }
   };
 
-    const handleUpdateCandidate = async (data, _id) => {
-        try {
-          await updateCandidate(_id, data);
-          fetchCandidates();
-          setNewCandidate({ name: "", email: "", phone: "", experience: "", position: "", resume: null, status: "Applied", _id: null });
-        } catch (error) {
-          console.error("Error updating candidate", error);
-        }
-      };
+  const handleUpdateCandidate = async (data, _id) => {
+    setModalLoading(true);
+    try {
+      await updateCandidate(_id, data);
+      fetchCandidates();
+      setNewCandidate({ name: "", email: "", phone: "", experience: "", position: "", resume: null, status: "Applied", _id: null });
+    } catch (error) {
+      console.error("Error updating candidate", error);
+    }
+    setModalLoading(false);
+  };
 
   const handleAddCandidate = async (data, _id = null) => {
     try {
       if (_id != null) {
         return handleUpdateCandidate(data, _id)
       }
+      setModalLoading(true);
       await addCandidate(data);
       fetchCandidates();
       setNewCandidate({ name: "", email: "", phone: "", experience: "", position: "", resume: null, status: "Applied", _id: null });
     } catch (error) {
       console.error("Error adding candidate", error);
     }
+    setModalLoading(false);
   };
 
   const handleDelete = async (id) => {
@@ -82,11 +89,11 @@ const Candidate = () => {
 
   const changeStatus = (_id, val) => {
     updateCandidateStatus(_id, val)
-    if(val === "Selected") {
+    if (val === "Selected") {
       fetchCandidates();
     }
     // update Candidates
-    const list = candidates.map((v) => v._id == _id ? {...v, status: val} : v)
+    const list = candidates.map((v) => v._id == _id ? { ...v, status: val } : v)
     setCandidates(list);
   }
 
@@ -103,7 +110,7 @@ const Candidate = () => {
             <input type="text" placeholder="Search" style={{ margin: 0 }} value={search} onChange={(e) => setSearch(e.target.value)} />
           </div>
           <div style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
-            <button onClick={() => {toggleModel(true); setNewCandidate({})}} className="candidate_button">Add Candidate</button>
+            <button onClick={() => { toggleModel(true); setNewCandidate({}) }} className="candidate_button">Add Candidate</button>
           </div>
         </div>
       </div>
@@ -131,7 +138,7 @@ const Candidate = () => {
                 <td data-label="Email Address" data-full-text={val.email}>{val.email}</td>
                 <td data-label="Phone Number">{val.phone}</td>
                 <td data-label="Position">{val.position}</td>
-                <td data-label="Department">              
+                <td data-label="Department">
                   <Select options={statusList} setSelected={changeStatus} id={val._id} selected={val.status} />
                 </td>
                 <td data-label="Experience">{val.experience}</td>
@@ -144,10 +151,20 @@ const Candidate = () => {
                 </td>
               </tr>
             ))}
+            {
+              candidates.length == 0 && (
+                <tr>
+                  <td colSpan={8} style={{textAlign: "center"}}>
+                    {loading ? <Loader spinner size={30} /> : "No data found"}
+                  </td>
+                </tr>
+              )
+            }            
           </tbody>
         </table>
       </div>
       {modal && <Modal data={newCandidate} statusList={statusList} onClose={toggleModel} setData={setNewCandidate} handleSubmit={handleAddCandidate} />}
+      {modalLoading && <Loader fullScreen size={30} />}
     </div>
   )
 }

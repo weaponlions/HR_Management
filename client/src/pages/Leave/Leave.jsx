@@ -5,12 +5,16 @@ import Modal from './Modal';
 import LeaveCalendar from '../Items/LeaveCalendar';
 import { getLeave, addNewLeave, updateLeaveStatus, downloadLeaveDocument } from '../../services/leaveService';
 import { FiFile } from 'react-icons/fi';
+import Loader from '../Items/Loader';
+import DateInput from './DateInput';
 
 const statusList = ["Status", "Pending", "Approved", "Rejected"];
 
 const Leave = () => {
     const [modal, setModal] = useState(false);
     const [status, setStatus] = useState(statusList[0]);
+    const [modalLoading, setModalLoading] = useState(false);
+    const [loading, setLoading] = useState(false);
 
     const toggleModel = (val) => {
         setModal(val)
@@ -25,16 +29,19 @@ const Leave = () => {
     }, []);
 
     const fetchLeaves = async () => {
+        setLoading(true)
         try {
             const data = await getLeave(search, (status != "" && status != "Status" ? status : ""));
             setLeaves(data);
         } catch (error) {
             console.error("Error fetching leave", error);
         }
+        setLoading(false)
     };
 
 
     const handleAddLeave = async (data) => {
+        setModalLoading(true)
         try {
             await addNewLeave(data);
             fetchLeaves();
@@ -42,6 +49,7 @@ const Leave = () => {
         } catch (error) {
             console.error("Error adding employee", error);
         }
+        setModalLoading(false)
     };
 
     const changeStatus = (_id, val) => {
@@ -49,16 +57,16 @@ const Leave = () => {
         fetchLeaves();
     }
 
-
     useEffect(() => {
         fetchLeaves();
     }, [status, search])
-
+    const [date, setDate] = useState(null);
     return (
-        <div>
+        <div className='mainBox'>
             <div className="candidate_SearchBox">
                 <div className="candidate_SearchBox_left">
                     <Select options={statusList} setSelected={setStatus} selected={status} />
+                    <DateInput noColor label={"Date"} onChange={setDate} value={date} />
                 </div>
                 <div className="candidate_SearchBox_right">
                     <div className="sidebar-search-box">
@@ -102,12 +110,22 @@ const Leave = () => {
                                     </td>
                                 </tr>
                             ))}
+                            {
+                                leaves.length == 0 && (
+                                    <tr>
+                                        <td colSpan={8} style={{ textAlign: "center" }}>
+                                            {loading ? <Loader spinner size={30} /> : "No data found"}
+                                        </td>
+                                    </tr>
+                                )
+                            }
                         </tbody>
                     </table>
                 </div>
                 <LeaveCalendar />
             </div>
             {modal && <Modal data={addLeave} handleSubmit={handleAddLeave} setData={setAddLeave} onClose={toggleModel} />}
+            {modalLoading && <Loader fullScreen size={30} />}
         </div>
     )
 }

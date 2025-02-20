@@ -14,12 +14,12 @@ const Title = {
 const Dashboard = () => {
   const location = useLocation();
   const currentPath = location.pathname?.split("/")[1] ?? "";
-
+  
   return (
     <div style={{ display: "flex" }}>
-      <Sidebar title={currentPath}/>
+      <Sidebar title={currentPath === "" ? "candidate" : currentPath}/>
       <div style={{ flex: 1, paddingTop: 5 }}>
-        <Header title={Title[currentPath]} />
+        <Header title={Title[currentPath === "" ? "candidate" : currentPath]} />
         <div style={{ maxHeight: 490, overflow: "auto", minHeight: 490 }}>
           <Outlet />
         </div>

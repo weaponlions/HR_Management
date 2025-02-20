@@ -6,7 +6,7 @@ export const addNewLeave = async (leaveData) => {
   return data;
 };
 
-export const getLeave = async (id, status) => {
+export const getLeave = async (search, status) => {
   const { data } = await API.get(`/leaves?employeeId=${search}&status=${status}`);
   return data;
 };
