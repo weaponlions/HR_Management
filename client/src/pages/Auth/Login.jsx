@@ -21,7 +21,7 @@ const Login = () => {
       const { token } = await login(email, password);
       // localStorage.setItem("token", token);
       setToken(token)
-      navigate("/candidate", {replace: true});
+      navigate("/", {replace: true});
     } catch (error) {
       alert("Invalid credentials");
     }
